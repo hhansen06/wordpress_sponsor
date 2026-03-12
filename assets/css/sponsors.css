@@ -1,0 +1,69 @@
+/* =========================================================
+   WordPress Sponsor Plugin – Frontend Styles
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   Widget 1: Grid (3 columns)
+   --------------------------------------------------------- */
+.wp-sponsor-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    align-items: center;
+}
+
+.wp-sponsor-grid__item {
+    text-align: center;
+}
+
+.wp-sponsor-grid__item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+}
+
+.wp-sponsor-grid__item a {
+    display: block;
+}
+
+/* ---------------------------------------------------------
+   Widget 2: Scroll ticker
+   --------------------------------------------------------- */
+.wp-sponsor-scroll {
+    overflow: hidden;
+    position: relative;
+}
+
+.wp-sponsor-scroll-track {
+    display: flex;
+    flex-direction: column;
+    /* duration is set dynamically by sponsors-scroll.js */
+    animation: wp-sponsor-scroll-anim linear infinite;
+}
+
+.wp-sponsor-scroll-item {
+    padding: 8px 0;
+    text-align: center;
+}
+
+.wp-sponsor-scroll-item img {
+    max-width: 100%;
+    height: auto;
+    display: inline-block;
+    object-fit: contain;
+}
+
+.wp-sponsor-scroll-item a {
+    display: inline-block;
+}
+
+@keyframes wp-sponsor-scroll-anim {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-50%);
+    }
+}
