@@ -1,0 +1,44 @@
+name: Create Release ZIP
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      PLUGIN_MAIN_FILE: wordpress_sponsor.php
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get release version
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Set plugin version
+        run: |
+          sed -i "s/@VERSION@/${{ steps.version.outputs.VERSION }}/g" "$PLUGIN_MAIN_FILE"
+
+      - name: Create ZIP with top-level folder
+        run: |
+          REPO_NAME="${GITHUB_REPOSITORY##*/}"
+          mkdir -p "dist/$REPO_NAME"
+          rsync -a --delete \
+            --exclude ".git" \
+            --exclude ".github" \
+            --exclude "dist" \
+            ./ "dist/$REPO_NAME/"
+          (cd dist && zip -r "../${REPO_NAME}-${{ steps.version.outputs.VERSION }}.zip" "$REPO_NAME")
+
+      - name: Upload Release Asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          REPO_NAME="${GITHUB_REPOSITORY##*/}"
+          gh release upload ${{ github.ref_name }} "${REPO_NAME}-${{ steps.version.outputs.VERSION }}.zip"
