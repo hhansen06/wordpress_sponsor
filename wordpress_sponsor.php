@@ -2,8 +2,9 @@
 /**
  * Plugin Name: WordPress Sponsor
  * Description: Sponsor management with logo display widgets.
- * Version:     1.0.0
- * Text Domain: wordpress-sponsor
+ * Version: @VERSION@
+ * Author: Henrik Hansen
+ * Text Domain: h2-wordpress-sponsor
  */
 
 if (!defined('ABSPATH')) {
