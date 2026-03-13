@@ -91,35 +91,26 @@ class Sponsor_Post_Type
     public static function render_meta_box(WP_Post $post): void
     {
         wp_nonce_field('sponsor_save_meta', 'sponsor_meta_nonce');
-        $link = get_post_meta($post->ID, '_sponsor_link', true);
+        $link = get_post_meta($post->ID, '_sponsor_link', true); // input id/name uses prefix to avoid conflicts
         $priority = get_post_meta($post->ID, '_sponsor_priority', true);
         if ('' === $priority) {
             $priority = 10;
         }
         ?>
-        <table class="form-table">
-            <tr>
-                <th scope="row">
-                    <label for="sponsor_link"><?php esc_html_e('Link URL', 'wordpress-sponsor'); ?></label>
-                </th>
-                <td>
-                    <input type="url" id="sponsor_link" name="sponsor_link" value="<?php echo esc_attr($link); ?>"
-                        class="regular-text" />
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">
-                    <label for="sponsor_priority"><?php esc_html_e('Priority', 'wordpress-sponsor'); ?></label>
-                </th>
-                <td>
-                    <input type="number" id="sponsor_priority" name="sponsor_priority"
-                        value="<?php echo esc_attr($priority); ?>" min="1" max="999" style="width:80px" />
-                    <p class="description">
-                        <?php esc_html_e('Lower number = higher priority (1 = first).', 'wordpress-sponsor'); ?>
-                    </p>
-                </td>
-            </tr>
-        </table>
+        <p>
+            <label for="wps_link"><strong><?php esc_html_e('Link URL', 'wordpress-sponsor'); ?></strong></label><br />
+            <input type="text" id="wps_link" name="wps_link"
+                   value="<?php echo esc_attr($link); ?>"
+                   style="width:100%;display:block!important;box-sizing:border-box;background:#fff;color:#3c434a;border:1px solid #8c8f94;padding:4px 8px;min-height:30px;"
+                   placeholder="https://example.com" />
+        </p>
+        <p>
+            <label for="sponsor_priority"><strong><?php esc_html_e('Priority', 'wordpress-sponsor'); ?></strong></label><br />
+            <input type="number" id="sponsor_priority" name="sponsor_priority"
+                   value="<?php echo esc_attr($priority); ?>"
+                   min="1" max="999" style="width:80px" />
+            <span class="description"><?php esc_html_e('Lower number = higher priority (1 = first).', 'wordpress-sponsor'); ?></span>
+        </p>
         <?php
     }
 
@@ -140,8 +131,8 @@ class Sponsor_Post_Type
             return;
         }
 
-        if (isset($_POST['sponsor_link'])) {
-            update_post_meta($post_id, '_sponsor_link', esc_url_raw(wp_unslash($_POST['sponsor_link'])));
+        if (isset($_POST['wps_link'])) {
+            update_post_meta($post_id, '_sponsor_link', esc_url_raw(wp_unslash($_POST['wps_link'])));
         }
 
         if (isset($_POST['sponsor_priority'])) {
