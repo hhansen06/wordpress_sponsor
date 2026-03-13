@@ -40,8 +40,9 @@ class Sponsor_Widget_Scroll extends WP_Widget
             return;
         }
 
-        $height = absint($instance['height'] ?? 300);
-        $speed = absint($instance['speed'] ?? 50); // px/s  — used by JS
+        $height  = absint($instance['height']  ?? 300);
+        $speed   = absint($instance['speed']   ?? 50);  // px/s — used by JS
+        $spacing = absint($instance['spacing'] ?? 8);   // px — gap between logos
 
         echo $args['before_widget'];
 
@@ -56,6 +57,9 @@ class Sponsor_Widget_Scroll extends WP_Widget
             $height,
             $speed
         );
+
+        // Inline the spacing so each item picks it up without a separate stylesheet.
+        echo '<style>.wp-sponsor-scroll-item{padding-top:' . $spacing . 'px;padding-bottom:' . $spacing . 'px;}</style>';
 
         echo '<div class="wp-sponsor-scroll-track">';
 
@@ -89,10 +93,11 @@ class Sponsor_Widget_Scroll extends WP_Widget
 
     public function form($instance): void
     {
-        $title = $instance['title'] ?? '';
-        $height = $instance['height'] ?? 300;
-        $speed = $instance['speed'] ?? 50;
-        $random = !empty($instance['random']);
+        $title   = $instance['title']   ?? '';
+        $height  = $instance['height']  ?? 300;
+        $speed   = $instance['speed']   ?? 50;
+        $spacing = $instance['spacing'] ?? 8;
+        $random  = !empty($instance['random']);
         ?>
         <p>
             <label for="<?php echo esc_attr($this->get_field_id('title')); ?>">
@@ -122,6 +127,14 @@ class Sponsor_Widget_Scroll extends WP_Widget
             </span>
         </p>
         <p>
+            <label for="<?php echo esc_attr($this->get_field_id('spacing')); ?>">
+                <?php esc_html_e('Spacing between logos (px):', 'wordpress-sponsor'); ?>
+            </label>
+            <input type="number" id="<?php echo esc_attr($this->get_field_id('spacing')); ?>"
+                name="<?php echo esc_attr($this->get_field_name('spacing')); ?>" value="<?php echo esc_attr($spacing); ?>"
+                min="0" max="200" style="width:80px" />
+        </p>
+        <p>
             <input type="checkbox" id="<?php echo esc_attr($this->get_field_id('random')); ?>"
                 name="<?php echo esc_attr($this->get_field_name('random')); ?>" value="1" <?php checked($random); ?>
             />
@@ -135,10 +148,11 @@ class Sponsor_Widget_Scroll extends WP_Widget
     public function update($new_instance, $old_instance): array
     {
         return [
-            'title' => sanitize_text_field($new_instance['title']),
-            'height' => absint($new_instance['height']) ?: 300,
-            'speed' => absint($new_instance['speed']) ?: 50,
-            'random' => !empty($new_instance['random']) ? 1 : 0,
+            'title'   => sanitize_text_field($new_instance['title']),
+            'height'  => absint($new_instance['height'])  ?: 300,
+            'speed'   => absint($new_instance['speed'])   ?: 50,
+            'spacing' => isset($new_instance['spacing']) ? absint($new_instance['spacing']) : 8,
+            'random'  => !empty($new_instance['random']) ? 1 : 0,
         ];
     }
 }

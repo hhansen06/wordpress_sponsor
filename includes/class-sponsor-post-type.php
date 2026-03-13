@@ -20,6 +20,16 @@ class Sponsor_Post_Type
         add_filter('manage_sponsor_posts_columns', [__CLASS__, 'admin_columns']);
         add_action('manage_sponsor_posts_custom_column', [__CLASS__, 'admin_column_content'], 10, 2);
         add_filter('manage_edit-sponsor_sortable_columns', [__CLASS__, 'sortable_columns']);
+        add_action('admin_head-post.php', [__CLASS__, 'hide_add_new_button']);
+    }
+
+    public static function hide_add_new_button(): void
+    {
+        global $post;
+        if (!$post || $post->post_type !== 'sponsor') {
+            return;
+        }
+        echo '<style>.page-title-action { display: none !important; }</style>';
     }
 
     public static function register_post_type(): void
